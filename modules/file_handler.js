@@ -5,7 +5,7 @@ const jsonfile = require('jsonfile');
 
 /**
 * Copies file(s)
-* modules/anthill-common-modules/modules/file_handler/copyFile
+* common-mods/modules/file_handler/copyFile
 * @param {String} source
 * @param {String} dest
 * @returns {String} path
@@ -22,7 +22,7 @@ const copyFiles = (source, dest) => new Promise(async (resolve, reject) => {
 
 /**
 * Reads a file
-* modules/anthill-common-modules/modules/file_handler/readFile
+* common-mods/modules/file_handler/readFile
 * @param {String} path
 * @param {Boolean} toString - if the output should be converted to String
 * @returns {Buffer | String} content of the file
@@ -39,7 +39,7 @@ const readFile = (path, toString) => new Promise((resolve, reject) => {
 
 /**
 * Writes into a file
-* modules/anthill-common-modules/modules/file_handler/writeFile
+* common-mods/modules/file_handler/writeFile
 * @param {String} path
 * @param {Buffer} body
 * @returns {String} path
@@ -58,7 +58,7 @@ const writeFile = (path, body) => new Promise((resolve, reject) => {
 
 /**
 * Reads a directory, checks to see if it is a directory beforehand
-* modules/anthill-common-modules/modules/file_handler/readDir
+* common-mods/modules/file_handler/readDir
 * @param {String} path
 * @returns {Array} list of dir contents, [] if not a directory
 */
@@ -78,7 +78,7 @@ const readDir = async (path) => {
 
 /**
 * Renames a file
-* modules/anthill-common-modules/modules/file_handler/renameFile
+* common-mods/modules/file_handler/renameFile
 * @param {String} path
 * @param {String} newPath
 * @returns {Array} list of dir contents
@@ -98,7 +98,7 @@ const renameFile = (path, newPath) => {
 
 /**
 * Checks the file size
-* modules/anthill-common-modules/modules/file_handler/getFileSize
+* common-mods/modules/file_handler/getFileSize
 * @param {String} filename
 * @returns {Number} size - size in Bytes
 */
@@ -114,7 +114,7 @@ const getFileSize = (filename) => new Promise((resolve, reject) => {
 
 /**
 * Checks if the path exists
-* modules/anthill-common-modules/modules/file_handler/pathExists
+* common-mods/modules/file_handler/pathExists
 * @param {String} path
 * @returns {}
 */
@@ -122,7 +122,7 @@ const pathExists = path => fs.existsSync(path);
 
 /**
 * Checks the path and creates it if it does not exists
-* modules/anthill-common-modules/modules/file_handler/ensurePath
+* common-mods/modules/file_handler/ensurePath
 * @param {String} path
 * @returns {}
 */
@@ -138,7 +138,7 @@ const ensurePath = async(path) => {
 
 /**
 * Removes a directory
-* modules/anthill-common-modules/modules/file_handler/cleanPath
+* common-mods/modules/file_handler/cleanPath
 * @param {String} path
 * @param {Boolean} includeParentFolder
 * @returns {}
@@ -160,7 +160,7 @@ const cleanPath = async (path, includeParentFolder) => {
 
 /**
 * Checks to see if the path is a directory
-* modules/anthill-common-modules/modules/file_handler/isDirectory
+* common-mods/modules/file_handler/isDirectory
 * @param {String} path
 * @returns {Boolean}
 */
@@ -168,7 +168,7 @@ const isDirectory = (path) => fs.lstatSync(path).isDirectory();
 
 /**
 * Writes a JSON file
-* modules/anthill-common-modules/modules/file_handler/writeJson
+* common-mods/modules/file_handler/writeJson
 * @param {String} path
 * @param {Object} Obj - which will be converted to JSON
 * @returns {}
@@ -186,7 +186,7 @@ const writeJson = (path, obj) => new Promise((resolve, reject) => {
 
 /**
 * Reads a JSON file
-* modules/anthill-common-modules/modules/file_handler/readJson
+* common-mods/modules/file_handler/readJson
 * @param {String} path
 * @returns {}
 */
