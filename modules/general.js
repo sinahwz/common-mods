@@ -74,6 +74,7 @@ const dateAndTime = () => dateFormat('yyyy-MM-dd hh:mm:ss', new Date());
 const chalkIt = (text, options = {}) => {
   const {
     isError,
+    data = '',
     bg = 'green',
   } = options;
   if (isError) {
@@ -82,6 +83,7 @@ const chalkIt = (text, options = {}) => {
     const bgColor = 'bg' + bg.charAt(0).toUpperCase() + bg.slice(1);
     console.log(chalk[bgColor].bold(text));
   }
+  console.log(data);
 };
 
 module.exports = {
