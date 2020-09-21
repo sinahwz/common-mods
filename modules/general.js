@@ -4,7 +4,7 @@ const chalk = require('chalk');
 
 /**
 * Allows timeouts before conrinuing
-* modules/anthill-common-modules/modules/general/timeout
+* common-mods/modules/general/timeout
 * @param {Number} ms - time to wait in miliseconds
 * @returns {}
 */
@@ -12,7 +12,7 @@ const timeout = (ms = 2000) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
 * Executes a shell command
-* modules/anthill-common-modules/modules/general/commandExec
+* common-mods/modules/general/commandExec
 * @param {String} command - command to be executed
 * @param {Boolean} silent - no outputs to be printed
 * @param {Boolean} printCmd - to print the command in console
@@ -35,7 +35,7 @@ const commandExec = (command, silent = false, printCmd = true) => new Promise((r
 
 /**
 * Ensures the passed string is in JSON format
-* modules/anthill-common-modules/modules/general/ensureJson
+* common-mods/modules/general/ensureJson
 * @param {String} string
 * @returns {}
 */
@@ -51,7 +51,7 @@ const ensureJson = (str) => {
 
 /**
 * Capitalizes the first letter of the String
-* modules/anthill-common-modules/modules/general/capitalizeFirstLetter
+* common-mods/modules/general/capitalizeFirstLetter
 * @param {String} string - string to have it's first letter capitalized
 * @returns {}
 */
@@ -59,14 +59,14 @@ const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + strin
 
 /**
 * Returns a standard date and time format
-* modules/anthill-common-modules/modules/general/dateAndTime
+* common-mods/modules/general/dateAndTime
 * @returns {String} Date and time in the format: 'yyyy-MM-dd hh:mm:ss'
 */
 const dateAndTime = () => dateFormat('yyyy-MM-dd hh:mm:ss', new Date());
 
 /**
 * Stylish console.log
-* modules/anthill-common-modules/modules/general/chalkIt
+* common-mods/modules/general/chalkIt
 * @params {String} text - text to log
 * @params {Boolean} isError
 * @returns {}
