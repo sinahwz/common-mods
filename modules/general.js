@@ -75,13 +75,14 @@ const chalkIt = (text, options = {}) => {
   const {
     isError,
     data = '',
+    font = 'gray',
     bg = 'green',
   } = options;
   if (isError) {
     console.log(chalk.bgRed.bold(text));
   } else {
     const bgColor = 'bg' + bg.charAt(0).toUpperCase() + bg.slice(1);
-    console.log(chalk[bgColor].bold(text));
+    console.log(chalk[font][bgColor].bold(text));
   }
   console.log(data);
 };
