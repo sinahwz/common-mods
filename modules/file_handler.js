@@ -71,7 +71,7 @@ const readFile = (path, toString) => new Promise((resolve, reject) => {
 const writeFile = (path, body) => new Promise(async (resolve, reject) => {
   // TODO: make sure body is buffer, if string, convert to buffer
   // Need to ensure that each path is available before
-  await ensurePath(`${path}/${PATH.dirname(path)}`);
+  await ensurePath(`${PATH.dirname(path)}`);
 
   fs.writeFile(path, body, (err) => {
     if (!err) {
