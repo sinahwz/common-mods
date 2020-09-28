@@ -4,6 +4,30 @@ const rimraf = require('rimraf');
 const jsonfile = require('jsonfile');
 
 /**
+* Checks to see if the path is a directory
+* common-mods/modules/file_handler/isDirectory
+* @param {String} path
+* @returns {Boolean}
+*/
+const isDirectory = (path) => fs.lstatSync(path).isDirectory();
+
+/**
+* Checks the path and creates it if it does not exists
+* common-mods/modules/file_handler/ensurePath
+* @param {String} path
+* @returns {}
+*/
+const ensurePath = async (path) => {
+  try {
+    await fs.ensureDir(path);
+    return Promise.resolve();
+  } catch (err) {
+    console.error('[ERR][ensurePath] ', err);
+    return Promise.reject(err);
+  }
+};
+
+/**
 * Copies file(s)
 * common-mods/modules/file_handler/copyFile
 * @param {String} source
@@ -47,7 +71,7 @@ const readFile = (path, toString) => new Promise((resolve, reject) => {
 const writeFile = (path, body) => new Promise(async (resolve, reject) => {
   // TODO: make sure body is buffer, if string, convert to buffer
   // Need to ensure that each path is available before
-  await ensurePath(`${path}/${Path.dirname(path)}`);
+  await ensurePath(`${path}/${PATH.dirname(path)}`);
 
   fs.writeFile(path, body, (err) => {
     if (!err) {
@@ -86,18 +110,16 @@ const readDir = async (path) => {
 * @param {String} newPath
 * @returns {Array} list of dir contents
 */
-const renameFile = (path, newPath) => {
-  return new Promise((resolve, reject) => {
-    fs.rename(path, newPath, (err, data) => {
-      if (!err) {
-        resolve(data);
-      } else {
-        console.log('[ERR][renameFile] ', err);
-        reject(err);
-      }
-    });
+const renameFile = (path, newPath) => new Promise((resolve, reject) => {
+  fs.rename(path, newPath, (err, data) => {
+    if (!err) {
+      resolve(data);
+    } else {
+      console.log('[ERR][renameFile] ', err);
+      reject(err);
+    }
   });
-};
+});
 
 /**
 * Checks the file size
@@ -121,23 +143,7 @@ const getFileSize = (filename) => new Promise((resolve, reject) => {
 * @param {String} path
 * @returns {}
 */
-const pathExists = path => fs.existsSync(path);
-
-/**
-* Checks the path and creates it if it does not exists
-* common-mods/modules/file_handler/ensurePath
-* @param {String} path
-* @returns {}
-*/
-const ensurePath = async(path) => {
-  try {
-    await fs.ensureDir(path);
-    return Promise.resolve();
-  } catch (err) {
-    console.error('[ERR][ensurePath] ', err);
-    return Promise.reject(err);
-  }
-};
+const pathExists = (path) => fs.existsSync(path);
 
 /**
 * Removes a directory
@@ -160,14 +166,6 @@ const cleanPath = async (path, includeParentFolder) => {
     return Promise.reject(err);
   }
 };
-
-/**
-* Checks to see if the path is a directory
-* common-mods/modules/file_handler/isDirectory
-* @param {String} path
-* @returns {Boolean}
-*/
-const isDirectory = (path) => fs.lstatSync(path).isDirectory();
 
 /**
 * Writes a JSON file
