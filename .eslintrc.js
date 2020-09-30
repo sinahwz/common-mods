@@ -20,10 +20,9 @@ module.exports = {
     'linebreak-style': 'off',
     'no-useless-computed-key': 'off',
     'no-async-promise-executor': 'off',
-    'max-len': ['error', { 'code': 200 }],
+    'max-len': ['error', { code: 200 }],
     'no-await-in-loop': 'off',
   },
   globals: {
   },
 };
-

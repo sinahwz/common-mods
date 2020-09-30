@@ -8,7 +8,7 @@ const chalk = require('chalk');
 * @param {Number} ms - time to wait in miliseconds
 * @returns {}
 */
-const timeout = (ms = 2000) => new Promise(resolve => setTimeout(resolve, ms));
+const timeout = (ms = 2000) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
 * Executes a shell command
@@ -81,7 +81,7 @@ const chalkIt = (text, options = {}) => {
   if (isError) {
     console.log(chalk.bgRed.bold(text));
   } else {
-    const bgColor = 'bg' + bg.charAt(0).toUpperCase() + bg.slice(1);
+    const bgColor = `bg${bg.charAt(0).toUpperCase()}${bg.slice(1)}`;
     console.log(chalk[font][bgColor].bold(text));
   }
   console.log(data);

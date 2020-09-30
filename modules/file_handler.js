@@ -1,7 +1,5 @@
 const fs = require('fs-extra');
 const PATH = require('path');
-const rimraf = require('rimraf');
-const jsonfile = require('jsonfile');
 
 /**
 * Checks to see if the path is a directory
@@ -60,6 +58,24 @@ const readFile = (path, toString) => new Promise((resolve, reject) => {
     }
   });
 });
+
+/**
+* Moves a file or directory with possibility of overwrite
+* common-mods/modules/file_handler/moveFiles
+* @param {String} source
+* @param {String} dest
+* @param {Boolean} overwrite
+* @returns {}
+*/
+const moveFiles = async (source, dest, overwrite = false) => {
+  try {
+    await fs.move(source, dest, { overwrite });
+    return Promise.resolve();
+  } catch (err) {
+    console.log('[ERR][moveFiles] ', err);
+    return Promise.reject(err);
+  }
+};
 
 /**
 * Writes into a file, path is also ensured to be available
@@ -127,15 +143,15 @@ const renameFile = (path, newPath) => new Promise((resolve, reject) => {
 * @param {String} filename
 * @returns {Number} size - size in Bytes
 */
-const getFileSize = (filename) => new Promise((resolve, reject) => {
+const getFileSize = (filename) => async () => {
   try {
     const { size } = fs.statSync(filename);
-    resolve(size); // size in Bytes
+    return Promise.resolve(size); // size in Bytes
   } catch (err) {
     console.log('[ERR][getFileSize] ', err);
-    reject(err);
+    return Promise.reject(err);
   }
-});
+};
 
 /**
 * Checks if the path exists
@@ -158,7 +174,7 @@ const cleanPath = async (path, includeParentFolder) => {
       if (includeParentFolder) {
         path = PATH.normalize(`${path}/..`);
       }
-      await rimraf.sync(path);
+      await fs.remove(path);
     }
     return Promise.resolve();
   } catch (err) {
@@ -174,16 +190,15 @@ const cleanPath = async (path, includeParentFolder) => {
 * @param {Object} Obj - which will be converted to JSON
 * @returns {}
 */
-const writeJson = (path, obj) => new Promise((resolve, reject) => {
-  jsonfile.writeFile(path, obj, { spaces: 2 }, (err) => {
-    if (err) {
-      console.log('[ERR][writeJson] ', err);
-      reject(err);
-    } else {
-      resolve();
-    }
-  });
-});
+const writeJson = async (path, obj) => {
+  try {
+    await fs.outputJson(path, obj, { spaces: 2 });
+    return Promise.resolve();
+  } catch (err) {
+    console.log('[ERR][writeJson] ', err);
+    return Promise.reject(err);
+  }
+};
 
 /**
 * Reads a JSON file
@@ -191,16 +206,15 @@ const writeJson = (path, obj) => new Promise((resolve, reject) => {
 * @param {String} path
 * @returns {}
 */
-const readJson = (path) => new Promise((resolve, reject) => {
-  jsonfile.readFile(path, (err, obj) => {
-    if (err) {
-      console.log('[ERR][readJson] ', err);
-      reject(err);
-    } else {
-      resolve(obj);
-    }
-  });
-});
+const readJson = async (path) => {
+  try {
+    const obj = await fs.readJson(path);
+    return Promise.resolve(obj);
+  } catch (err) {
+    console.log('[ERR][readJson] ', err);
+    return Promise.reject(err);
+  }
+};
 
 module.exports = {
   cleanPath,
@@ -211,6 +225,7 @@ module.exports = {
   pathExists,
   readDir,
   readFile,
+  moveFiles,
   readJson,
   renameFile,
   writeFile,
