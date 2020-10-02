@@ -23,7 +23,7 @@ const { ensurePath, pathExists } = require('./file_handler');
 * @param {String} dest
 * @param {Object} options
 * @param {Array} options.excludedPaths
-* @returns {}
+* @returns {string|ReadableStream}
 */
 
 // TODO: add 'exclude' parameter
