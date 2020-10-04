@@ -11,6 +11,7 @@ const { ensurePath, pathExists } = require('./file_handler');
  * @property {ReadableStream|ReadableStream[]} - streamor array of streams to be read from
  * @property {string} [glob] - e.g. if you want a directory with some excluded files you may pass src/**\/!(banana.txt)
  *                                  or to exclude a subdirectrory src/!(bananas)/**\/*
+ *                                  or for a structure like this https://prnt.sc/usx263 => 'modules/{!(excl)/**\/*,**.*}
  *                                  Note: "\" is used for escaping comment end in the examples above
  * @property {boolean} [outputStream=false] - by default the handler will create a file in the fs and resolve the path
  */
