@@ -26,60 +26,68 @@ const { ensurePath, pathExists } = require('./file_handler');
 * @returns {string|ReadableStream}
 */
 
-// TODO: add 'exclude' parameter
 module.exports.zipper = async (source, zipName, dest) => new Promise(async (resolve, reject) => {
   const config = typeof source === 'string'
-    ? { directory: source }
+    ? { directory: source, zipName, dest }
     : { ...source };
 
-  if (pathExists(source)) {
-    const nameWithDotZip = zipName.endsWith('.zip') ? zipName : `${zipName}.zip`;
-    const zipPath = `${dest}/${nameWithDotZip}`;
-    await ensurePath(dest);
-    const outputZip = fs.createWriteStream(zipPath);
-    const archive = archiver('zip', {
-      zlib: { level: 9 },
-    });
+  const archive = archiver('zip', {
+    zlib: { level: 9 },
+  });
 
-    archive.on('error', (err) => {
-      console.log('[ERR][zipper] ', err);
+  archive.on('error', (err) => {
+    console.log('[ERR][zipper] ', err);
+    reject(err);
+  });
+
+  // good practice to catch warnings (ie stat failures and other non-blocking errors)
+  archive.on('warning', (err) => {
+    if (err.code === 'ENOENT') {
+      // log warning
+      console.log('[DEV] Archive Warning', err);
+    } else {
+      console.error('[DEV] Archive error', err);
+    }
+  });
+
+  // handle directory
+  if (config.directory) {
+    console.log(' :::: source', config.directory);
+    if (pathExists(config.directory)) {
+      archive.directory(config.directory, false);
+    } else {
+      const err = {
+        errMessage: ` [ERR][zipper] path not found: ${config.directory}`,
+      };
       reject(err);
-    });
+    }
+  }
+
+  if (config.glob) {
+    archive.glob(config.glob);
+  }
+
+  // finalize archive input
+  archive.finalize();
+
+  // handle archive output
+  if (config.outputStream) {
+    resolve(archive);
+  } else {
+    const nameWithDotZip = config.zipName.endsWith('.zip') ? config.zipName : `${config.zipName}.zip`;
+    const zipPath = `${config.dest}/${nameWithDotZip}`;
+    await ensurePath(config.dest);
+    const outputZip = fs.createWriteStream(zipPath);
 
     outputZip.on('close', () => {
       console.log(`${archive.pointer()} total bytes`);
       console.log('[DEV][zipper] archiver has been finalized and the output file descriptor has closed.');
 
+      // TODO: do we really need this timeout...
       setTimeout(() => {
         resolve(zipPath);
       }, 1000);
     });
-
-    // good practice to catch warnings (ie stat failures and other non-blocking errors)
-    archive.on('warning', (err) => {
-      if (err.code === 'ENOENT') {
-        // log warning
-        console.log('[DEV] Archive Warning', err);
-      } else {
-        console.error('[DEV] Archive error', err);
-      }
-    });
-
-    console.log(' :::: source', source);
-    archive.directory(source, false);
-
-    // TODO: useful when trying to exclude paths
-    // TODO: issue is that, it adds all glob matches files under 'source'
-    // archive.glob(`${source}/**/*`, {
-    //   // ignore: ['mydir/**', 'file.txt'],
-    // });
-
     archive.pipe(outputZip);
-    archive.finalize();
-  } else {
-    const err = {
-      errMessage: ` [ERR][zipper] path not found: ${source}`,
-    };
-    reject(err);
   }
 });
