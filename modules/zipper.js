@@ -3,16 +3,21 @@ const archiver = require('archiver');
 const { ensurePath, pathExists } = require('./file_handler');
 
 /**
+ * @typedef {object} ZippableEntity
+ * @property {string} name
+ * @property {string|Buffer|ReadableStream} entity
+ */
+
+/**
  * @typedef {object} ZipperConfig
  * @property {string} [directory] - if you want to create a ZIP from directory
  * @property {string} [zipName] - name of the ZIP you want to create, ignored if `outputStream === true`
  * @property {string} [dest] - dest of the created ZIP, ignored if `outputStream === true`
- * @property {string} [directory] - if you want to create a zip from directory
- * @property {ReadableStream|ReadableStream[]} - streamor array of streams to be read from
  * @property {string} [glob] - e.g. if you want a directory with some excluded files you may pass src/**\/!(banana.txt)
  *                                  or to exclude a subdirectrory src/!(bananas)/**\/*
  *                                  or for a structure like this https://prnt.sc/usx263 => 'modules/{!(excl)/**\/*,**.*}
  *                                  Note: "\" is used for escaping comment end in the examples above
+ * @property {ZippableEntity[]} [entities] - array of ZippableEntity (with strings, buffers or streams)
  * @property {boolean} [outputStream=false] - by default the handler will create a file in the fs and resolve the path
  */
 
@@ -68,11 +73,17 @@ module.exports.zipper = async (source, zipName, dest) => new Promise(async (reso
     archive.glob(config.glob);
   }
 
+  if (config.entities) {
+    config.entities
+      .forEach(({ name, entity }) => archive.append(entity, { name }));
+  }
+
   // finalize archive input
   archive.finalize();
 
   // handle archive output
   if (config.outputStream) {
+    console.log('[DEV][zipper] Stream ready!');
     resolve(archive);
   } else {
     const nameWithDotZip = config.zipName.endsWith('.zip') ? config.zipName : `${config.zipName}.zip`;
