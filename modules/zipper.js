@@ -58,7 +58,6 @@ module.exports.zipper = async (source, zipName, dest) => new Promise(async (reso
 
   // handle directory
   if (config.directory) {
-    console.log(' :::: source', config.directory);
     if (pathExists(config.directory)) {
       archive.directory(config.directory, false);
     } else {
@@ -95,10 +94,7 @@ module.exports.zipper = async (source, zipName, dest) => new Promise(async (reso
       console.log(`${archive.pointer()} total bytes`);
       console.log('[DEV][zipper] archiver has been finalized and the output file descriptor has closed.');
 
-      // TODO: do we really need this timeout...
-      setTimeout(() => {
-        resolve(zipPath);
-      }, 1000);
+      resolve(zipPath);
     });
     archive.pipe(outputZip);
   }
