@@ -216,6 +216,20 @@ const readJson = async (path) => {
   }
 };
 
+/**
+ * Converts a stream to a buffer
+ * @param {ReadableStream} stream
+ * @returns {Promise<Buffer>}
+ */
+const getBufferFromStream = async (stream) => new Promise((res, rej) => {
+  const buffers = [];
+  stream.on('data', (chunk) => buffers.push(chunk));
+  stream.on('end', () => {
+    res(Buffer.concat(buffers));
+  });
+  stream.on('error', (error) => rej(error));
+});
+
 module.exports = {
   cleanPath,
   copyFiles,
@@ -230,4 +244,5 @@ module.exports = {
   renameFile,
   writeFile,
   writeJson,
+  getBufferFromStream,
 };
