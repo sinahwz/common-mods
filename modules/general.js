@@ -19,12 +19,13 @@ const timeout = (ms = 2000) => new Promise((resolve) => setTimeout(resolve, ms))
 * @returns {}
 */
 const commandExec = (command, silent = false, printCmd = true) => new Promise((resolve, reject) => {
+  // TODO: support array of commands
   try {
     if (printCmd) {
       console.log('\n  Executing command::::::: ', command);
     }
     shell.exec(command, { silent }, (code, stdout, stderr) => {
-      if (stderr && code !== 0) reject(stderr);
+      if (stderr || code !== 0) reject(stderr);
       else resolve(stdout);
     });
   } catch (err) {
@@ -60,9 +61,10 @@ const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + strin
 /**
 * Returns a standard date and time format
 * common-mods/modules/general/dateAndTime
+* @param {String} date - date to be converted to the desired format
 * @returns {String} Date and time in the format: 'yyyy-MM-dd hh:mm:ss'
 */
-const dateAndTime = () => dateFormat('yyyy-MM-dd hh:mm:ss', new Date());
+const dateAndTime = (date) => dateFormat('yyyy-MM-dd hh:mm:ss', date || new Date());
 
 /**
 * Stylish console.log
@@ -75,7 +77,7 @@ const chalkIt = (text, options = {}) => {
   const {
     isError,
     data = '',
-    font = 'gray',
+    font = 'black',
     bg = 'green',
   } = options;
   if (isError) {

@@ -30,7 +30,7 @@ const ensurePath = async (path) => {
 * common-mods/modules/file_handler/copyFile
 * @param {String} source
 * @param {String} dest
-* @returns {String} path
+* @returns {}
 */
 const copyFiles = (source, dest) => new Promise(async (resolve, reject) => {
   try {
@@ -84,20 +84,19 @@ const moveFiles = async (source, dest, overwrite = false) => {
 * @param {Buffer} body
 * @returns {String} path
 */
-const writeFile = (path, body) => new Promise(async (resolve, reject) => {
+const writeFile = async (path, body) => {
   // TODO: make sure body is buffer, if string, convert to buffer
   // Need to ensure that each path is available before
-  await ensurePath(`${PATH.dirname(path)}`);
+  try {
+    await fs.writeFile(path, body);
+    await ensurePath(`${PATH.dirname(path)}`);
 
-  fs.writeFile(path, body, (err) => {
-    if (!err) {
-      resolve(path);
-    } else {
-      console.log('[ERR][writeFile] ', err);
-      reject(err);
-    }
-  });
-});
+    return Promise.resolve();
+  } catch (err) {
+    console.log('[ERR][writeFile] ', err);
+    return Promise.reject(err);
+  }
+};
 
 /**
 * Reads a directory, checks to see if it is a directory beforehand
@@ -204,7 +203,7 @@ const writeJson = async (path, obj) => {
 * Reads a JSON file
 * common-mods/modules/file_handler/readJson
 * @param {String} path
-* @returns {}
+* @returns {Object} obj - contents of the json file
 */
 const readJson = async (path) => {
   try {
