@@ -22,11 +22,17 @@ const commandExec = (command, silent = false, printCmd = true) => new Promise((r
   // TODO: support array of commands
   try {
     if (printCmd) {
-      console.log('\n  Executing command::::::: ', command);
+      console.log('\n  [DEV] Executing command::::::: ', command);
     }
-    shell.exec(command, { silent }, (code, stdout, stderr) => {
-      if (stderr || code !== 0) reject(stderr);
-      else resolve(stdout);
+    shell.exec(command, { silent }, (statusCode, stdOut, stdErr) => {
+      if (statusCode !== 0) {
+        console.log(' [ERR][commandExec][shell]', {
+          stdOut,
+          stdErr,
+          statusCode,
+        });
+        reject(stdErr);
+      } else resolve(stdOut);
     });
   } catch (err) {
     console.log('[ERR][commandExec] ', err);
