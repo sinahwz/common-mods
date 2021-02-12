@@ -27,7 +27,6 @@ const commandExec = (command, silent = false, printCmd = true) => new Promise((r
     shell.exec(command, { silent }, (statusCode, stdOut, stdErr) => {
       if (statusCode !== 0) {
         console.log(' [ERR][commandExec][shell]', {
-          stdOut,
           stdErr,
           statusCode,
         });

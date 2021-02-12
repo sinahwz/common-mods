@@ -88,8 +88,8 @@ const writeFile = async (path, body) => {
   // TODO: make sure body is buffer, if string, convert to buffer
   // Need to ensure that each path is available before
   try {
-    await fs.writeFile(path, body);
     await ensurePath(`${PATH.dirname(path)}`);
+    await fs.writeFile(path, body);
 
     return Promise.resolve();
   } catch (err) {
